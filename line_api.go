@@ -33,7 +33,7 @@ func replyMessage(e Event) {
 
 	replyMessage := ReplyMessage{
 		Type: "text",
-		Text: "Hello",
+		Text: e.Message.Text,
 	}
 
 	reply := Reply{
