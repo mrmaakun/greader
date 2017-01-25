@@ -23,6 +23,14 @@ func processMessageEvent(e Event) {
 
 	// Get the User ID to check if we've seen this user before
 	if e.Source.UserId != "" {
+		// Get the profile to store in the db
+		profile, err := getProfile(e.Source.UserId)
+		if err != nil {
+			log.Println("Get profile failed. Putting blank profile data into the DB")
+		} else {
+			// Record Name
+			displayName = profile.DisplayName
+		}
 
 		result := User{}
 		err = c.Find(bson.M{"userid": e.Source.UserId}).One(&result)
@@ -30,15 +38,6 @@ func processMessageEvent(e Event) {
 
 			// The user is not found in the database so we will add them.
 			log.Println(err.Error())
-
-			// Get the profile to store in the db
-			profile, err := getProfile(e.Source.UserId)
-			if err != nil {
-				log.Println("Get profile failed. Putting blank profile data into the DB")
-			} else {
-				// Record Name
-				displayName = profile.DisplayName
-			}
 
 			err = c.Insert(&User{e.Source.UserId, false, profile})
 			if err != nil {
@@ -63,7 +62,7 @@ func processMessageEvent(e Event) {
 		if haveSeenUser {
 			replyMessage(e, "Hello "+displayName+", I've see you before!")
 		} else {
-			replyMessage(e, "Hello"+displayName+", you're new here, aren't you?")
+			replyMessage(e, "Hello "+displayName+", you're new here, aren't you?")
 		}
 	}
 }
