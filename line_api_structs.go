@@ -50,6 +50,13 @@ type ReplyMessage struct {
 	AltText            string  `json:"altText,omitempty"`
 }
 
+type Profile struct {
+	DisplayName   string `json:"displayName,omitempty"`
+	UserId        string `json:"userId,omitempty"`
+	PictureUrl    string `json:"pictureUrl,omitempty"`
+	StatusMessage string `json:"statusMessage,omitempty"`
+}
+
 /*
 type ReplyMessage struct {
 	Type               string            `json:"type,omitempty"`
