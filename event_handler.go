@@ -9,6 +9,7 @@ func processMessageEvent(e Event) {
 
 	var haveSeenUser bool = false
 	var displayName string = ""
+	var currentUserData User = User{}
 
 	// Get the User ID to check if we've seen this user before
 	// Skip this processing if this is not a user
@@ -21,9 +22,10 @@ func processMessageEvent(e Event) {
 			displayName = profile.DisplayName
 		}
 
-		if userInDatabase(e.Source.UserId) == false {
+		currentUserData, err = getUserFromDatabase(e.Source.UserId)
+		if err != nil {
 			log.Println("User is not database")
-			err = addUserToDatabase(e.Source.UserId)
+			currentUserData, err = addUserToDatabase(e.Source.UserId)
 			if err != nil {
 				log.Println(err.Error())
 				log.Println("Could not add user to database")
@@ -48,10 +50,14 @@ func processMessageEvent(e Event) {
 				replyMessage(e, "Okay, I'll pretend I haven't seen you before!")
 			}
 		default:
-			if haveSeenUser {
-				replyMessage(e, "Hello "+displayName+", I've see you before!")
+			if currentUserData.ImageUploaded == true {
+				replyMessage(e, "It looks like you sent me an image. Do you want to know anything about it?")
 			} else {
-				replyMessage(e, "Hello "+displayName+", you're new here, aren't you?")
+				if haveSeenUser {
+					replyMessage(e, "Hello "+displayName+", I've see you before!")
+				} else {
+					replyMessage(e, "Hello "+displayName+", you're new here, aren't you?")
+				}
 			}
 		}
 

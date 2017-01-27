@@ -17,4 +17,7 @@ func processImageMessage(e Event) {
 
 	replyMessage(e, "Thanks for the image! You can access your image here for a short amount of time: "+imageFilename)
 	log.Println("imageId: " + imageFilename)
+
+	// Flag the user as having sent a message
+	markImageUploaded(e.Source.UserId)
 }

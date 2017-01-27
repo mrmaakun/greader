@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func userInDatabase(userId string) bool {
+func getUserFromDatabase(userId string) (User, error) {
 
 	// Connect to Mongo DB
 	session, err := mgo.Dial(os.Getenv("MONGO_DB_URL"))
@@ -21,24 +21,28 @@ func userInDatabase(userId string) bool {
 	err = c.Find(bson.M{"userid": userId}).One(&result)
 	if err != nil {
 		log.Println(err.Error())
-		return false
+		return result, err
 	} else {
-		return true
+		return result, err
 	}
 
 }
 
-func addUserToDatabase(userId string) error {
+func addUserToDatabase(userId string) (User, error) {
+
+	addUser := User{}
 
 	// Connect to Mongo DB
 	session, err := mgo.Dial(os.Getenv("MONGO_DB_URL"))
 	if err != nil {
-		return err
+		return addUser, err
 	}
+
+	addUser = User{userId, false}
 	defer session.Close()
 	c := session.DB(os.Getenv("MONGO_DB_NAME")).C("users")
-	err = c.Insert(&User{userId, false})
-	return err
+	err = c.Insert(addUser)
+	return addUser, err
 
 }
 
@@ -54,4 +58,19 @@ func removeUserFromDatabase(userId string) error {
 	c := session.DB(os.Getenv("MONGO_DB_NAME")).C("users")
 	err = c.Remove(bson.M{"userid": userId})
 	return err
+}
+
+func markImageUploaded(userId string) error {
+
+	// Connect to Mongo DB
+	session, err := mgo.Dial(os.Getenv("MONGO_DB_URL"))
+	if err != nil {
+		return err
+	}
+	defer session.Close()
+
+	c := session.DB(os.Getenv("MONGO_DB_NAME")).C("users")
+	err = c.Update(bson.M{"userid": userId}, bson.M{"$set": bson.M{"imageuploaded": true}})
+	return err
+
 }
