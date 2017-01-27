@@ -3,10 +3,11 @@ package main
 import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"log"
 	"os"
 )
 
-func checkIfFirstTimeUser(userId string) bool {
+func userInDatabase(userId string) bool {
 
 	// Connect to Mongo DB
 	session, err := mgo.Dial(os.Getenv("MONGO_DB_URL"))
@@ -20,7 +21,7 @@ func checkIfFirstTimeUser(userId string) bool {
 	result := User{}
 	err = c.Find(bson.M{"userid": userId}).One(&result)
 	if err != nil {
-
+		log.Println(err.Error())
 		return false
 	} else {
 		return true
@@ -40,10 +41,7 @@ func addUserToDatabase(userId string) error {
 	c := session.DB(os.Getenv("MONGO_DB_NAME")).C("users")
 
 	err = c.Insert(&User{userId, false})
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 
 }
