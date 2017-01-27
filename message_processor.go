@@ -14,6 +14,7 @@ func processImageMessage(e Event) {
 	if err != nil {
 		log.Println("Error downloading image")
 		log.Println(err.Error())
+		return
 	}
 
 	replyMessage(e, "Thanks for the image! You can access your image here for a short amount of time: "+imageFilename)
@@ -29,6 +30,7 @@ func processAudioMessage(e Event) {
 	if err != nil {
 		log.Println("Error downloading audio")
 		log.Println(err.Error())
+		return
 	}
 
 	replyMessage(e, "Thanks for the audio file!! You can access your image here for a short amount of time: "+audioFilename)
