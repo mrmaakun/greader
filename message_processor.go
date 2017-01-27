@@ -27,7 +27,7 @@ func processAudioMessage(e Event) {
 
 	audioFilename, err := downloadAudio(e.Message.Id)
 	if err != nil {
-		log.Println("Error downloading image")
+		log.Println("Error downloading audio")
 		log.Println(err.Error())
 	}
 

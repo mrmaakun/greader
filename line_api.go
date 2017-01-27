@@ -16,6 +16,8 @@ func httpRequest(method string, url string, payload []byte) (*http.Response, err
 	var req = &http.Request{}
 	var err error
 
+	log.Println("Request URL: " + url)
+
 	if payload != nil {
 		req, err = http.NewRequest(method, url, bytes.NewBuffer(payload))
 	} else {
@@ -33,6 +35,8 @@ func httpRequest(method string, url string, payload []byte) (*http.Response, err
 	if err != nil {
 		return nil, err
 	}
+
+	log.Println("Response Code: " + strconv.Itoa(resp.StatusCode))
 
 	// Throw an error if the response is over 400
 	if resp.StatusCode >= 400 {
@@ -81,9 +85,6 @@ func getProfile(userId string) (Profile, error) {
 	if resp == nil {
 		log.Println("resp is nil")
 	}
-
-	log.Println("Request URL: " + url)
-	log.Println("Response Code: " + strconv.Itoa(resp.StatusCode))
 
 	if err != nil {
 		log.Println("Error getting profile")
