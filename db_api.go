@@ -60,7 +60,7 @@ func removeUserFromDatabase(userId string) error {
 	return err
 }
 
-func markImageUploaded(userId string) error {
+func changeImageUploaded(userId string, imageUploaded bool) error {
 
 	// Connect to Mongo DB
 	session, err := mgo.Dial(os.Getenv("MONGO_DB_URL"))
@@ -70,7 +70,7 @@ func markImageUploaded(userId string) error {
 	defer session.Close()
 
 	c := session.DB(os.Getenv("MONGO_DB_NAME")).C("users")
-	err = c.Update(bson.M{"userid": userId}, bson.M{"$set": bson.M{"imageuploaded": true}})
+	err = c.Update(bson.M{"userid": userId}, bson.M{"$set": bson.M{"imageuploaded": imageUploaded}})
 	return err
 
 }

@@ -20,8 +20,8 @@ func processImageMessage(e Event) {
 	replyMessage(e, "Thanks for the image! You can access your image here for a short amount of time: "+imageFilename)
 	log.Println("imageId: " + imageFilename)
 
-	// Flag the user as having sent a message
-	markImageUploaded(e.Source.UserId)
+	// Flag the user as having sent an image
+	changeImageUploaded(e.Source.UserId, true)
 }
 
 func processAudioMessage(e Event) {
@@ -36,6 +36,4 @@ func processAudioMessage(e Event) {
 	replyMessage(e, "Thanks for the audio file!! You can access your image here for a short amount of time: "+audioFilename)
 	log.Println("audioId: " + audioFilename)
 
-	// Flag the user as having sent a message
-	markImageUploaded(e.Source.UserId)
 }

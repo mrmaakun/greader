@@ -51,12 +51,20 @@ func processMessageEvent(e Event) {
 			}
 		default:
 			if currentUserData.ImageUploaded == true {
-				replyMessage(e, "It looks like you sent me an image. Do you want to know anything about it?")
+
+				switch strings.ToLower(e.Message.Text) {
+				case "no":
+					replyMessage(e, "Okay, let's forget about this image!")
+					changeImageUploaded(e.Source.UserId, false)
+				default:
+					replyMessage(e, "It looks like you sent me an image. Do you want to know anything about it?")
+
+				}
 			} else {
 				if haveSeenUser {
 					replyMessage(e, "Hello "+displayName+", I've see you before!")
 				} else {
-					replyMessage(e, "Hello "+displayName+", you're new here, aren't you?")
+					replyMessage(e, "Hello "+displayName+", I've never seen you around before. Nice to meet you!")
 				}
 			}
 		}
