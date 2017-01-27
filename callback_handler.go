@@ -35,6 +35,7 @@ func registerRouteHandlers() {
 
 	var endpoint_port = os.Getenv("PORT")
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("images"))))
+	http.Handle("/audio/", http.StripPrefix("/audio/", http.FileServer(http.Dir("audio"))))
 	http.HandleFunc("/bot/", callbackHandler)
 
 	log.Println("Listening on port " + endpoint_port)
