@@ -60,9 +60,10 @@ func processMessageEvent(e Event) {
 				}
 			}
 		}
-
 	case "image":
 		processImageMessage(e)
+	case "audio":
+		processAudioMessage(e)
 	}
 }
 

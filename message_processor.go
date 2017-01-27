@@ -7,6 +7,7 @@ import (
 func processTextMessage() {
 
 }
+
 func processImageMessage(e Event) {
 
 	imageFilename, err := downloadImage(e.Message.Id)
@@ -17,6 +18,21 @@ func processImageMessage(e Event) {
 
 	replyMessage(e, "Thanks for the image! You can access your image here for a short amount of time: "+imageFilename)
 	log.Println("imageId: " + imageFilename)
+
+	// Flag the user as having sent a message
+	markImageUploaded(e.Source.UserId)
+}
+
+func processAudioMessage(e Event) {
+
+	audioFilename, err := downloadAudio(e.Message.Id)
+	if err != nil {
+		log.Println("Error downloading image")
+		log.Println(err.Error())
+	}
+
+	replyMessage(e, "Thanks for the audio file!! You can access your image here for a short amount of time: "+audioFilename)
+	log.Println("audioId: " + audioFilename)
 
 	// Flag the user as having sent a message
 	markImageUploaded(e.Source.UserId)

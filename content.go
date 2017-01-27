@@ -12,19 +12,19 @@ import (
 
 func downloadImage(imageId string) (string, error) {
 
+	// Call the content download API to get the image
 	resp, err := contentDownload(imageId)
 	if err != nil {
 		return "", err
 	}
 
 	// Save image file
-
 	imageFileName := "image_" + strconv.Itoa(rand.Intn(10000)) + ".jpg"
 	newFile, err := os.Create("images/" + imageFileName)
 
 	numBytesWritten, err := io.Copy(newFile, resp.Body)
 	if err != nil {
-		log.Println("Error download file")
+		log.Println("Error downloading image file")
 		log.Println(err.Error())
 		return "", err
 	}
@@ -36,6 +36,35 @@ func downloadImage(imageId string) (string, error) {
 	cleanMediaDirectory("images")
 
 	return os.Getenv("BASE_HOSTNAME") + "/images/" + imageFileName, nil
+}
+
+func downloadAudio(audioId string) (string, error) {
+
+	// Call the content download API to get the image
+	resp, err := contentDownload(audioId)
+	if err != nil {
+		return "", err
+	}
+
+	// Save image file
+	audioFileName := "audio_" + strconv.Itoa(rand.Intn(10000)) + ".m4a"
+	newFile, err := os.Create("audio/" + audioFileName)
+
+	numBytesWritten, err := io.Copy(newFile, resp.Body)
+	if err != nil {
+		log.Println("Error downloading audio file")
+		log.Println(err.Error())
+		return "", err
+	}
+
+	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
+	log.Println("File name: " + audioFileName)
+
+	// Delete the oldest
+	cleanMediaDirectory("audio")
+
+	return os.Getenv("BASE_HOSTNAME") + "/audio/" + audioFileName, nil
+
 }
 
 func cleanMediaDirectory(dirName string) {
