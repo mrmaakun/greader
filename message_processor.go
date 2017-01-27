@@ -8,7 +8,6 @@ func processTextMessage() {
 
 }
 func processImageMessage(e Event) {
-	replyMessage(e, "Thanks for the image! Give me a minute while I check it out.")
 
 	imageFilename, err := downloadImage(e.Message.Id)
 	if err != nil {
@@ -16,5 +15,6 @@ func processImageMessage(e Event) {
 		log.Println(err.Error())
 	}
 
+	replyMessage(e, "Thanks for the image! You can access your image here for a short amount of time: "+imageFilename)
 	log.Println("imageId: " + imageFilename)
 }
