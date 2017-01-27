@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 )
 
 func processMessageEvent(e Event) {
@@ -34,10 +35,18 @@ func processMessageEvent(e Event) {
 	if e.Message.Type == "text" {
 		log.Println(e.Message.Text)
 
-		if haveSeenUser {
-			replyMessage(e, "Hello "+displayName+", I've see you before!")
-		} else {
-			replyMessage(e, "Hello "+displayName+", you're new here, aren't you?")
+		switch strings.ToLower(e.Message.Text) {
+		case "forget me":
+			err := removeUserFromDatabase(e.Source.UserId)
+			if err != nil {
+				log.Println("Error removing user from database")
+			}
+		default:
+			if haveSeenUser {
+				replyMessage(e, "Hello "+displayName+", I've see you before!")
+			} else {
+				replyMessage(e, "Hello "+displayName+", you're new here, aren't you?")
+			}
 		}
 	}
 }
