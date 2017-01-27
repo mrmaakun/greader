@@ -22,12 +22,14 @@ func processMessageEvent(e Event) {
 		}
 
 		if userInDatabase(e.Source.UserId) == false {
+			log.Println("User is not database")
 			err = addUserToDatabase(e.Source.UserId)
 			if err != nil {
 				log.Println(err.Error())
 				log.Println("Could not add user to database")
 			}
 		} else {
+			log.Println("User is in database")
 			haveSeenUser = true
 		}
 	}
@@ -39,7 +41,10 @@ func processMessageEvent(e Event) {
 		case "forget me":
 			err := removeUserFromDatabase(e.Source.UserId)
 			if err != nil {
+				replyMessage(e, "Oops, I couldn't forget you!")
 				log.Println("Error removing user from database")
+			} else {
+				replyMessage(e, "Okay, I'll pretend I haven't seen you before!")
 			}
 		default:
 			if haveSeenUser {
