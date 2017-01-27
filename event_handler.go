@@ -20,7 +20,7 @@ func processMessageEvent(e Event) {
 			displayName = profile.DisplayName
 		}
 
-		if checkIfFirstTimeUser(e.Source.UserId) {
+		if checkIfFirstTimeUser(e.Source.UserId) == true {
 			addUserToDatabase(e.Source.UserId)
 		} else {
 			haveSeenUser = true
