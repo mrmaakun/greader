@@ -30,5 +30,5 @@ func downloadImage(imageId string) (string, error) {
 	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
 	log.Println("File name: " + imageFileName)
 
-	return os.Getenv("BASE_HOSTNAME") + imageFileName, nil
+	return os.Getenv("BASE_HOSTNAME") + "/" + imageFileName, nil
 }
