@@ -34,7 +34,8 @@ func processMessageEvent(e Event) {
 		}
 	}
 
-	if e.Message.Type == "text" {
+	switch e.Message.Type {
+	case "text":
 		log.Println(e.Message.Text)
 
 		switch strings.ToLower(e.Message.Text) {
@@ -53,6 +54,9 @@ func processMessageEvent(e Event) {
 				replyMessage(e, "Hello "+displayName+", you're new here, aren't you?")
 			}
 		}
+
+	case "image":
+		processImageMessage(e)
 	}
 }
 

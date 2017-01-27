@@ -101,9 +101,18 @@ func getProfile(userId string) (Profile, error) {
 
 	// Close the Body after using. (Find a better way to do this later)
 	defer resp.Body.Close()
-
 	json.Unmarshal(body, &returnProfile)
 
 	return returnProfile, nil
+
+}
+
+func contentDownload(contentId string) (*http.Response, error) {
+
+	//	GET https://api.line.me/v2/bot/message/{messageId}/content
+
+	url := apiEndpoint + "message/" + contentId + "/content"
+	resp, err := httpRequest("GET", url, nil)
+	return resp, err
 
 }

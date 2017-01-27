@@ -14,7 +14,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 
 	// Get the events out of the request structure
-
 	request := &struct {
 		Events []*Event `json:"events"`
 	}{}
@@ -35,6 +34,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 func registerRouteHandlers() {
 
 	var endpoint_port = os.Getenv("PORT")
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("images"))))
 	http.HandleFunc("/bot/", callbackHandler)
 
 	log.Println("Listening on port " + endpoint_port)
