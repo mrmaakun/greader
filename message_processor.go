@@ -17,11 +17,22 @@ func processImageMessage(e Event) {
 		return
 	}
 
-	replyMessage(e, "Thanks for the image! You can access your image here for a short amount of time: "+imageFilename)
 	log.Println("imageId: " + imageFilename)
 
 	// Flag the user as having sent an image
+
+	imageData, err := visionApi(imageFilename)
+
+	if err != nil {
+		log.Println("Error calling vision API")
+		log.Println(err.Error())
+	}
+
+	updateImage(e.Source.UserId, imageData)
 	changeImageUploaded(e.Source.UserId, true)
+
+	replyMessage(e, imageData.Description.Captions[0].Text)
+
 }
 
 func processAudioMessage(e Event) {

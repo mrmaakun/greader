@@ -38,7 +38,7 @@ func addUserToDatabase(userId string) (User, error) {
 		return addUser, err
 	}
 
-	addUser = User{userId, false}
+	addUser = User{userId, false, ImageInformation{}}
 	defer session.Close()
 	c := session.DB(os.Getenv("MONGO_DB_NAME")).C("users")
 	err = c.Insert(addUser)
@@ -71,6 +71,21 @@ func changeImageUploaded(userId string, imageUploaded bool) error {
 
 	c := session.DB(os.Getenv("MONGO_DB_NAME")).C("users")
 	err = c.Update(bson.M{"userid": userId}, bson.M{"$set": bson.M{"imageuploaded": imageUploaded}})
+	return err
+
+}
+
+func updateImage(userId string, imageData ImageInformation) error {
+
+	// Connect to Mongo DB
+	session, err := mgo.Dial(os.Getenv("MONGO_DB_URL"))
+	if err != nil {
+		return err
+	}
+	defer session.Close()
+
+	c := session.DB(os.Getenv("MONGO_DB_NAME")).C("users")
+	err = c.Update(bson.M{"userid": userId}, bson.M{"$set": bson.M{"imagedata": imageData}})
 	return err
 
 }
