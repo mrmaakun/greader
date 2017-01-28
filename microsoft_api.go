@@ -76,7 +76,8 @@ func visionApi(imageUrl string) (ImageInformation, error) {
 		return ImageInformation{}, err
 	}
 
-	log.Println(body)
+	log.Println("Image Information JSON:")
+	log.Println(string(body))
 
 	// Close the Body after using. (Find a better way to do this later)
 	defer resp.Body.Close()
