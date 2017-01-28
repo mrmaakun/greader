@@ -90,7 +90,7 @@ func updateImage(userId string, imageData ImageInformation) error {
 
 }
 
-func updateEmotionData(userId string, emotionData map[int]string) error {
+func updateEmotionData(userId string, emotionData map[string]string) error {
 
 	// Connect to Mongo DB
 	session, err := mgo.Dial(os.Getenv("MONGO_DB_URL"))

@@ -4,6 +4,7 @@ import (
 	"log"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 func processTextMessage() {
@@ -30,10 +31,11 @@ func processImageMessage(e Event) {
 		log.Println(err.Error())
 	}
 
-	emotionResultMap := make(map[int]string)
+	//We have to use a string string map because mongo db can only handle strings as keys
+	emotionResultMap := make(map[string]string)
 
 	for _, emotionData := range emotionDataSlice {
-		emotionResultMap[emotionData.FaceRectangle.Left] = determineEmotion(emotionData)
+		emotionResultMap[strconv.Itoa(emotionData.FaceRectangle.Left)] = determineEmotion(emotionData)
 	}
 
 	log.Println("Predicted Emotions: ")
@@ -49,7 +51,13 @@ func processImageMessage(e Event) {
 
 	var facePositionSlice []int
 	for k, _ := range emotionResultMap {
-		facePositionSlice = append(facePositionSlice, k)
+		convertedKey, err := strconv.Atoi(k)
+		if err != nil {
+			log.Println("Error sorting emotion result keys")
+			log.Println(err.Error())
+			return
+		}
+		facePositionSlice = append(facePositionSlice, convertedKey)
 	}
 
 	sort.Ints(facePositionSlice)
@@ -58,10 +66,16 @@ func processImageMessage(e Event) {
 
 	numberOfFaces := len(imageData.Faces)
 	if numberOfFaces > 0 {
-		pictureDescriptionSlice = append(pictureDescriptionSlice, "There appear to be "+strconv.Itoa(numberOfFaces)+"people in this picture.")
-		pictureDescriptionSlice = append(pictureDescriptionSlice, "The first person on the left appears to be feeling "+emotionResultMap[facePositionSlice[0]])
-		for i := 1; i < len(facePositionSlice); i++ {
-			pictureDescriptionSlice = append(pictureDescriptionSlice, "The next person to the right appears to be feeling "+emotionResultMap[facePositionSlice[i]])
+		pictureDescriptionSlice = append(pictureDescriptionSlice, "There appear to be "+strconv.Itoa(numberOfFaces)+" people in this picture.")
+
+		// TODO: Make this a constant somewhere
+		// Only try to describe emotions if there are only a few people. If there are too many, the send message API
+		// Will fail
+		if numberOfFaces < 5 {
+			pictureDescriptionSlice = append(pictureDescriptionSlice, "The first person on the left appears to be feeling "+strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])]))
+			for i := 1; i < len(facePositionSlice); i++ {
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The next person to the right appears to be feeling "+strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[i])]))
+			}
 		}
 
 	}
