@@ -22,6 +22,7 @@ func processImageMessage(e Event) {
 	// Flag the user as having sent an image
 
 	imageData, err := visionApi(imageFilename)
+	emotionApi(imageFilename)
 
 	if err != nil {
 		log.Println("Error calling vision API")
