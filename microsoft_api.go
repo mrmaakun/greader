@@ -7,19 +7,33 @@ import (
 	"os"
 )
 
+type FaceRectangle struct {
+	Height int `json:"height,omitempty"`
+	Left   int `json:"left,omitempty"`
+	Top    int `json:"top,omitempty"`
+	Width  int `json:"width,omitempty"`
+}
+
+type EmotionScores struct {
+	FaceRectangle FaceRectangle `json:"faceRectangle"`
+	Scores        struct {
+		Anger     float64 `json:"anger"`
+		Contempt  float64 `json:"contempt"`
+		Disgust   float64 `json:"disgust"`
+		Fear      float64 `json:"fear"`
+		Happiness float64 `json:"happiness"`
+		Neutral   float64 `json:"neutral"`
+		Sadness   float64 `json:"sadness"`
+		Surprise  float64 `json:"surprise"`
+	}
+}
+
 type VisionApiRequest struct {
 	Url string `json:"url,omitempty"`
 }
 
 type EmotionApiRequest struct {
 	Url string `json:"url,omitempty"`
-}
-
-type FaceRectangle struct {
-	Left   int `json:"left,omitempty"`
-	Top    int `json:"top,omitempty"`
-	Width  int `json:"width,omitempty"`
-	Height int `json:"height,omitempty"`
 }
 
 type ImageInformation struct {
@@ -48,8 +62,8 @@ type ImageInformation struct {
 }
 
 type EmotionInformation []struct {
-	FaceRectangle FaceRectangle `json:"faceRectangle"`
-	Scores        struct {
+	Face   FaceRectangle `json:"faceRectangle"`
+	Scores struct {
 		Anger     float64 `json:"anger"`
 		Contempt  float64 `json:"contempt"`
 		Disgust   float64 `json:"disgust"`
@@ -58,7 +72,7 @@ type EmotionInformation []struct {
 		Neutral   float64 `json:"neutral"`
 		Sadness   float64 `json:"sadness"`
 		Surprise  float64 `json:"surprise"`
-	} `json:"scores"`
+	}
 }
 
 func visionApi(imageUrl string) (ImageInformation, error) {
@@ -106,7 +120,7 @@ func visionApi(imageUrl string) (ImageInformation, error) {
 	return returnImageInformation, nil
 }
 
-func emotionApi(imageUrl string) (EmotionInformation, error) {
+func emotionApi(imageUrl string) ([]EmotionScores, error) {
 
 	var headers = map[string]string{
 		"Ocp-Apim-Subscription-Key": os.Getenv("EMOTION_API_KEY"),
@@ -117,12 +131,12 @@ func emotionApi(imageUrl string) (EmotionInformation, error) {
 		Url: imageUrl,
 	}
 
-	var returnEmotionInformation EmotionInformation = EmotionInformation{}
+	var returnEmotionInformation []EmotionScores
 
 	jsonPayload, err := json.Marshal(requestParameters)
 	if err != nil {
 		log.Println("Error unmarshalling message: " + err.Error())
-		return EmotionInformation{}, err
+		return []EmotionScores{}, err
 	}
 
 	url := "https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize"
@@ -131,14 +145,14 @@ func emotionApi(imageUrl string) (EmotionInformation, error) {
 
 	if err != nil {
 		log.Println("Error calling the vision api")
-		return EmotionInformation{}, err
+		return []EmotionScores{}, err
 	}
 
 	// Read body into bytes
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("Error getting profile")
-		return EmotionInformation{}, err
+		return []EmotionScores{}, err
 	}
 
 	log.Println("Image Information JSON:")

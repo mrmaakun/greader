@@ -22,15 +22,25 @@ func processImageMessage(e Event) {
 	// Flag the user as having sent an image
 
 	imageData, err := visionApi(imageFilename)
-	emotionApi(imageFilename)
-
+	emotionDataSlice, err := emotionApi(imageFilename)
 	if err != nil {
 		log.Println("Error calling vision API")
 		log.Println(err.Error())
 	}
 
+	emotionResultMap := make(map[int]string)
+
+	for _, emotionData := range emotionDataSlice {
+		emotionResultMap[emotionData.FaceRectangle.Left] = determineEmotion(emotionData)
+	}
+
 	updateImage(e.Source.UserId, imageData)
 	changeImageUploaded(e.Source.UserId, true)
+
+	log.Println("Predicted Emotions: ")
+	for k, v := range emotionResultMap {
+		log.Println("k:", k, "v:", v)
+	}
 
 	replyMessage(e, imageData.Description.Captions[0].Text)
 
