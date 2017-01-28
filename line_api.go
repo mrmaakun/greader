@@ -11,7 +11,7 @@ import (
 	"strconv"
 )
 
-func httpRequest(method string, url string, payload []byte) (*http.Response, error) {
+func httpRequest(method string, url string, headers map[string]string, payload []byte) (*http.Response, error) {
 
 	var req = &http.Request{}
 	var err error
@@ -24,10 +24,9 @@ func httpRequest(method string, url string, payload []byte) (*http.Response, err
 		req, err = http.NewRequest(method, url, nil)
 	}
 
-	req.Header.Set("Authorization", "Bearer "+os.Getenv("LINE_CHANNEL_ACCESS_TOKEN"))
-	req.Header.Set("Content-Type", "application/json")
-
-	log.Println(os.Getenv("LINE_CHANNEL_ACCESS_TOKEN"))
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -63,7 +62,12 @@ func replyMessage(e Event, message string) {
 	jsonPayload, err := json.Marshal(reply)
 
 	url := apiEndpoint + "message/reply"
-	resp, err := httpRequest("POST", url, jsonPayload)
+
+	var headers = map[string]string{
+		"Authorization": "Bearer " + os.Getenv("LINE_CHANNEL_ACCESS_TOKEN"),
+		"Content-Type":  "application/json",
+	}
+	resp, err := httpRequest("POST", url, headers, jsonPayload)
 	if err != nil {
 		log.Println("Error sending reply" + err.Error())
 
@@ -80,7 +84,12 @@ func getProfile(userId string) (Profile, error) {
 
 	url := apiEndpoint + "profile/" + userId
 
-	resp, err := httpRequest("GET", url, nil)
+	var headers = map[string]string{
+		"Authorization": "Bearer " + os.Getenv("LINE_CHANNEL_ACCESS_TOKEN"),
+		"Content-Type":  "application/json",
+	}
+
+	resp, err := httpRequest("GET", url, headers, nil)
 
 	if resp == nil {
 		log.Println("resp is nil")
@@ -110,10 +119,13 @@ func getProfile(userId string) (Profile, error) {
 
 func contentDownload(contentId string) (*http.Response, error) {
 
-	//	GET https://api.line.me/v2/bot/message/{messageId}/content
+	var headers = map[string]string{
+		"Authorization": "Bearer " + os.Getenv("LINE_CHANNEL_ACCESS_TOKEN"),
+		"Content-Type":  "application/json",
+	}
 
 	url := apiEndpoint + "message/" + contentId + "/content"
-	resp, err := httpRequest("GET", url, nil)
+	resp, err := httpRequest("GET", url, headers, nil)
 	return resp, err
 
 }
