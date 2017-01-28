@@ -64,9 +64,9 @@ func processMessageEvent(e Event) {
 				}
 			} else {
 				if haveSeenUser {
-					replyMessage(e, []string{"Hello " + displayName + ", I've see you before!"})
+					replyMessage(e, []string{"Hello " + displayName + ", I've see you before! Why don't you send me an image so that I can tell you about it?"})
 				} else {
-					replyMessage(e, []string{"Hello " + displayName + ", I've never seen you around before. Nice to meet you!"})
+					replyMessage(e, []string{"Hello " + displayName + ", I've never seen you around before. Nice to meet you! If you send me an image, I will tell you about it!"})
 				}
 			}
 		}
