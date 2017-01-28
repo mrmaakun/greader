@@ -38,7 +38,7 @@ func addUserToDatabase(userId string) (User, error) {
 		return addUser, err
 	}
 
-	addUser = User{userId, false, ImageInformation{}, map[int]string{}}
+	addUser = User{userId, false, ImageInformation{}, map[string]string{}}
 	defer session.Close()
 	c := session.DB(os.Getenv("MONGO_DB_NAME")).C("users")
 	err = c.Insert(addUser)
