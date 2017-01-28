@@ -45,18 +45,22 @@ func httpRequest(method string, url string, headers map[string]string, payload [
 	return resp, err
 }
 
-func replyMessage(e Event, message string) {
+func replyMessage(e Event, messages []string) {
 
 	log.Println("Entered reply message")
 
-	replyMessage := ReplyMessage{
-		Type: "text",
-		Text: message,
+	outgoingMessageSlice := []ReplyMessage{}
+
+	for _, message := range messages {
+		outgoingMessageSlice = append(outgoingMessageSlice, ReplyMessage{
+			Type: "text",
+			Text: message,
+		})
 	}
 
 	reply := Reply{
 		SendReplyToken: e.ReplyToken,
-		Messages:       []ReplyMessage{replyMessage},
+		Messages:       outgoingMessageSlice,
 	}
 
 	jsonPayload, err := json.Marshal(reply)

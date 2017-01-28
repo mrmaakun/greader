@@ -44,29 +44,29 @@ func processMessageEvent(e Event) {
 		case "forget me":
 			err := removeUserFromDatabase(e.Source.UserId)
 			if err != nil {
-				replyMessage(e, "Oops, I couldn't forget you!")
+				replyMessage(e, []string{"Oops, I couldn't forget you!"})
 				log.Println("Error removing user from database")
 			} else {
-				replyMessage(e, "Okay, I'll pretend I haven't seen you before!")
+				replyMessage(e, []string{"Okay, I'll pretend I haven't seen you before!"})
 			}
 		default:
 			if currentUserData.ImageUploaded == true {
 
 				switch strings.ToLower(e.Message.Text) {
 				case "no":
-					replyMessage(e, "Okay, let's forget about this image!")
+					replyMessage(e, []string{"Okay, let's forget about this image!"})
 					changeImageUploaded(e.Source.UserId, false)
 				case "yes":
-					replyMessage(e, currentUserData.ImageData.Description.Captions[0].Text)
+					replyMessage(e, []string{currentUserData.ImageData.Description.Captions[0].Text})
 				default:
-					replyMessage(e, "It looks like you sent me an image. Do you want to know anything about it?")
+					replyMessage(e, []string{"It looks like you sent me an image. Do you want to know anything about it?"})
 
 				}
 			} else {
 				if haveSeenUser {
-					replyMessage(e, "Hello "+displayName+", I've see you before!")
+					replyMessage(e, []string{"Hello " + displayName + ", I've see you before!"})
 				} else {
-					replyMessage(e, "Hello "+displayName+", I've never seen you around before. Nice to meet you!")
+					replyMessage(e, []string{"Hello " + displayName + ", I've never seen you around before. Nice to meet you!"})
 				}
 			}
 		}
