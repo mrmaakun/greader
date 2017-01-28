@@ -56,6 +56,8 @@ func processMessageEvent(e Event) {
 				case "no":
 					replyMessage(e, "Okay, let's forget about this image!")
 					changeImageUploaded(e.Source.UserId, false)
+				case "yes":
+					replyMessage(e, currentUserData.ImageData.Description.Captions[0].Text)
 				default:
 					replyMessage(e, "It looks like you sent me an image. Do you want to know anything about it?")
 
