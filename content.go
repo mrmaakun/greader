@@ -36,8 +36,8 @@ func downloadImage(imageId string) (string, error) {
 	// Delete the oldest
 	cleanMediaDirectory("images")
 
-	//return os.Getenv("BASE_HOSTNAME") + "/images/" + imageFileName, nil
-	return "http://techslides.com/demos/samples/sample.mp3", nil
+	return os.Getenv("BASE_HOSTNAME") + "/images/" + imageFileName, nil
+	//return "http://techslides.com/demos/samples/sample.mp3", nil
 
 }
 
