@@ -59,6 +59,8 @@ func saveAudio(audioData []byte) (string, error) {
 	// Delete the oldest
 	cleanMediaDirectory("audio")
 
+	audioFileName = "SampleAudio_0.7mb.mp3"
+
 	return os.Getenv("BASE_HOSTNAME") + "/audio/" + audioFileName, nil
 
 }
