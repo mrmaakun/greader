@@ -197,7 +197,7 @@ func textToSpeechApi(text string) ([]byte, error) {
 	headers = map[string]string{
 		"Authorization":            "Bearer " + speechAccessToken,
 		"Content-Type":             "application/ssml+xml",
-		"X-Microsoft-OutputFormat": "audio-16khz-16kbps-mono-siren",
+		"X-Microsoft-OutputFormat": "riff-16khz-16kbps-mono-siren",
 	}
 
 	payload := []byte("<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)'>" + text + "</voice></speak>")
