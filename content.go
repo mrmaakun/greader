@@ -7,7 +7,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
-	//"os/exec"
+	"os/exec"
 	"strconv"
 	"time"
 )
@@ -48,7 +48,7 @@ func saveAudio(audioData []byte) (string, error) {
 
 	// Save image file
 	audioFileName := "audio_" + strconv.Itoa(rand.Intn(10000))
-	newFile, err := os.Create("audio/" + audioFileName + ".m4a")
+	newFile, err := os.Create("audio/" + audioFileName + ".mp3")
 
 	numBytesWritten, err := io.Copy(newFile, bytes.NewReader(audioData))
 	if err != nil {
@@ -60,15 +60,14 @@ func saveAudio(audioData []byte) (string, error) {
 	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
 	log.Println("File name: " + audioFileName)
 
-	/*
-		cmd := "ffmpeg"
-		args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "libfdk_aac", "audio/" + audioFileName + ".m4a"}
-		if err := exec.Command(cmd, args...).Run(); err != nil {
-			os.Exit(1)
-		}
-		log.Println("converted mp3 to m4a")
-
-	*/
+	cmd := "ffmpeg"
+	args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "libfdk_aac", "audio/" + audioFileName + ".m4a"}
+	if err := exec.Command(cmd, args...).Run(); err != nil {
+		log.Println("Error downloading audio file")
+		log.Println(err.Error())
+		return "", err
+	}
+	log.Println("converted mp3 to m4a")
 
 	// Delete the oldest
 	cleanMediaDirectory("audio")
