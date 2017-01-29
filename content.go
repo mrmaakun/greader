@@ -60,7 +60,7 @@ func saveAudio(audioData []byte) (string, error) {
 	cleanMediaDirectory("audio")
 
 	//return os.Getenv("BASE_HOSTNAME") + "/audio/" + audioFileName, nil
-	return "http://techslides.com/demos/samples/sample.mp3", nil
+	return "https://archive.org/download/testmp3testfile/mpthreetest.mp3", nil
 
 }
 
