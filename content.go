@@ -37,7 +37,6 @@ func downloadImage(imageId string) (string, error) {
 	cleanMediaDirectory("images")
 
 	return os.Getenv("BASE_HOSTNAME") + "/images/" + imageFileName, nil
-	//return "http://techslides.com/demos/samples/sample.mp3", nil
 
 }
 
@@ -60,7 +59,8 @@ func saveAudio(audioData []byte) (string, error) {
 	// Delete the oldest
 	cleanMediaDirectory("audio")
 
-	return os.Getenv("BASE_HOSTNAME") + "/audio/" + audioFileName, nil
+	//return os.Getenv("BASE_HOSTNAME") + "/audio/" + audioFileName, nil
+	return "http://techslides.com/demos/samples/sample.mp3", nil
 
 }
 
