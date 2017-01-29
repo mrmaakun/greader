@@ -42,7 +42,7 @@ func downloadImage(imageId string) (string, error) {
 func saveAudio(audioData []byte) (string, error) {
 
 	// Save image file
-	audioFileName := "audio_" + strconv.Itoa(rand.Intn(10000)) + ".m4a"
+	audioFileName := "audio_" + strconv.Itoa(rand.Intn(10000)) + ".mp3"
 	newFile, err := os.Create("audio/" + audioFileName)
 
 	numBytesWritten, err := io.Copy(newFile, bytes.NewReader(audioData))
