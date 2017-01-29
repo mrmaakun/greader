@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"os/exec"
 	"strconv"
 	"time"
 )
@@ -42,9 +43,12 @@ func downloadImage(imageId string) (string, error) {
 
 func saveAudio(audioData []byte) (string, error) {
 
+	// Used this buildpack to install FFMPEG:
+	// https://elements.heroku.com/buildpacks/jonathanong/heroku-buildpack-ffmpeg-latest
+
 	// Save image file
-	audioFileName := "audio_" + strconv.Itoa(rand.Intn(10000)) + ".m4a"
-	newFile, err := os.Create("audio/" + audioFileName)
+	audioFileName := "audio_" + strconv.Itoa(rand.Intn(10000))
+	newFile, err := os.Create("audio/" + audioFileName + ".mp3")
 
 	numBytesWritten, err := io.Copy(newFile, bytes.NewReader(audioData))
 	if err != nil {
@@ -56,12 +60,17 @@ func saveAudio(audioData []byte) (string, error) {
 	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
 	log.Println("File name: " + audioFileName)
 
+	cmd := "ffmpeg"
+	args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "libfdk_aac", "audio/" + audioFileName + ".m4a"}
+	if err := exec.Command(cmd, args...).Run(); err != nil {
+		os.Exit(1)
+	}
+	log.Println("converted mp3 to m4a")
+
 	// Delete the oldest
 	cleanMediaDirectory("audio")
 
-	//audioFileName = "sample.m4a"
-
-	return os.Getenv("BASE_HOSTNAME") + "/audio/" + audioFileName, nil
+	return os.Getenv("BASE_HOSTNAME") + "/audio/" + audioFileName + ".m4a", nil
 
 }
 
