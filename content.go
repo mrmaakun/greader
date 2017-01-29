@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"io"
 	"io/ioutil"
 	"log"
@@ -38,9 +39,32 @@ func downloadImage(imageId string) (string, error) {
 	return os.Getenv("BASE_HOSTNAME") + "/images/" + imageFileName, nil
 }
 
+func saveAudio(audioData []byte) (string, error) {
+
+	// Save image file
+	audioFileName := "audio_" + strconv.Itoa(rand.Intn(10000)) + ".m4a"
+	newFile, err := os.Create("audio/" + audioFileName)
+
+	numBytesWritten, err := io.Copy(newFile, bytes.NewReader(audioData))
+	if err != nil {
+		log.Println("Error downloading audio file")
+		log.Println(err.Error())
+		return "", err
+	}
+
+	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
+	log.Println("File name: " + audioFileName)
+
+	// Delete the oldest
+	cleanMediaDirectory("audio")
+
+	return os.Getenv("BASE_HOSTNAME") + "/audio/" + audioFileName, nil
+
+}
+
 func downloadAudio(audioId string) (string, error) {
 
-	// Call the content download API to get the image
+	// Call the content download API to get the audio
 	resp, err := contentDownload(audioId)
 	if err != nil {
 		return "", err

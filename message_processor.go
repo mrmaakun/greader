@@ -79,7 +79,8 @@ func processImageMessage(e Event) {
 		}
 
 	}
-	replyMessage(e, pictureDescriptionSlice)
+
+	replyMessage(e, []string{convertToVoice(pictureDescriptionSlice)})
 
 }
 

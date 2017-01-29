@@ -82,6 +82,44 @@ func replyMessage(e Event, messages []string) {
 
 }
 
+func audioReplyMessage(e Event, messages []string) {
+
+	log.Println("Entered reply message")
+
+	outgoingMessageSlice := []ReplyMessage{}
+
+	for _, message := range messages {
+		outgoingMessageSlice = append(outgoingMessageSlice, ReplyMessage{
+			Type:               "audio",
+			Duration:           1000,
+			OriginalContentUrl: message,
+		})
+	}
+
+	reply := Reply{
+		SendReplyToken: e.ReplyToken,
+		Messages:       outgoingMessageSlice,
+	}
+
+	jsonPayload, err := json.Marshal(reply)
+
+	url := apiEndpoint + "message/reply"
+
+	var headers = map[string]string{
+		"Authorization": "Bearer " + os.Getenv("LINE_CHANNEL_ACCESS_TOKEN"),
+		"Content-Type":  "application/json",
+	}
+	resp, err := httpRequest("POST", url, headers, jsonPayload)
+	if err != nil {
+		log.Println("Error sending reply" + err.Error())
+
+		return
+	}
+	// Close the Body after using. (Find a better way to do this later. It's kind of weird doing it in a different method)
+	defer resp.Body.Close()
+
+}
+
 func getProfile(userId string) (Profile, error) {
 
 	log.Println("Getting user profile")

@@ -165,3 +165,56 @@ func emotionApi(imageUrl string) ([]EmotionScores, error) {
 	return returnEmotionInformation, nil
 
 }
+
+func textToSpeechApi(text string) ([]byte, error) {
+
+	// Get Access Token
+	url := "https://api.cognitive.microsoft.com/sts/v1.0/issueToken"
+
+	var headers = map[string]string{
+		"Ocp-Apim-Subscription-Key": os.Getenv("SPEECH_API_KEY"),
+	}
+
+	resp, err := httpRequest("POST", url, headers, nil)
+
+	if err != nil {
+		log.Println("Error calling the speech API")
+		return []byte{}, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error calling the speech API")
+		return []byte{}, err
+	}
+
+	speechAccessToken := string(body)
+
+	log.Println("Speech Access Token: " + speechAccessToken)
+
+	url = "https://speech.platform.bing.com/synthesize?OutputFormat=Audio16khz128kbitrateMonoMp3"
+
+	headers = map[string]string{
+		"Authorization":            "Bearer " + speechAccessToken,
+		"Content-Type":             "application/ssml+xml",
+		"X-Microsoft-OutputFormat": "riff-8khz-8bit-mono-mulaw",
+	}
+
+	payload := []byte("<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)'>" + text + "</voice></speak>")
+
+	resp, err = httpRequest("POST", url, headers, payload)
+
+	if err != nil {
+		log.Println("Error calling the speech API")
+		return []byte{}, err
+	}
+
+	returnData, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Println("Error calling the speech API")
+		return []byte{}, err
+	}
+
+	return returnData, nil
+}

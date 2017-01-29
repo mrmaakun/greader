@@ -41,7 +41,7 @@ type ReplyMessage struct {
 	PreviewImageUrl    string  `json:"previewImageUrl,omitempty"`
 	PackageId          string  `json:"packageId,omitempty"`
 	StickerId          string  `json:"stickerId,omitempty"`
-	Duration           string  `json:"duration,omitempty"`
+	Duration           int32   `json:"duration,omitempty"`
 	Title              string  `json:"title,omitempty"`
 	Address            string  `json:"address,omitempty"`
 	Latitude           float32 `json:"latitude,omitempty"`
