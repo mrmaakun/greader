@@ -103,6 +103,9 @@ func audioReplyMessage(e Event, messages []string) {
 
 	jsonPayload, err := json.Marshal(reply)
 
+	log.Println("Parameter Information JSON:")
+	log.Println(string(jsonPayload))
+
 	url := apiEndpoint + "message/reply"
 
 	var headers = map[string]string{
