@@ -61,7 +61,7 @@ func saveAudio(audioData []byte) (string, error) {
 	log.Println("File name: " + audioFileName)
 
 	cmd := "ffmpeg"
-	args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "libfdk_aac", "audio/" + audioFileName + ".m4a"}
+	args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "aac -strict experimental", "audio/" + audioFileName + ".m4a"}
 	if err := exec.Command(cmd, args...).Run(); err != nil {
 		log.Println("Error downloading audio file")
 		log.Println(err.Error())
