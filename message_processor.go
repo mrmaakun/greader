@@ -66,6 +66,11 @@ func processImageMessage(e Event) {
 
 	numberOfFaces := len(imageData.Faces)
 	if numberOfFaces > 0 {
+
+		if numberOfFaces == 1 {
+			pictureDescriptionSlice = append(pictureDescriptionSlice, "There person in this picture appe")
+		}
+
 		pictureDescriptionSlice = append(pictureDescriptionSlice, "There appear to be "+strconv.Itoa(numberOfFaces)+" people in this picture.")
 
 		// TODO: Make this a constant somewhere
