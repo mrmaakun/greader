@@ -10,7 +10,7 @@ import (
 	"mime/multipart"
 	"net/textproto"
 	"os"
-	"os/exec"
+	//"os/exec"
 	"strconv"
 	"time"
 )
