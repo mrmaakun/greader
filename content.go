@@ -61,7 +61,7 @@ func saveAudio(audioData []byte) (string, error) {
 
 	buf := new(bytes.Buffer)
 
-	newFile, err := os.Create("audio/" + audioFileName + ".mp3")
+	newFile, err := os.Create("audio/" + audioFileName + ".m4a")
 
 	numBytesWritten, err := io.Copy(newFile, bytes.NewReader(audioData))
 	if err != nil {
@@ -73,9 +73,9 @@ func saveAudio(audioData []byte) (string, error) {
 	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
 	log.Println("File name: " + audioFileName)
 
-	file, _ := os.Open("audio/" + audioFileName + ".mp3")
+	file, _ := os.Open("audio/" + audioFileName + ".m4a")
 	writer := multipart.NewWriter(buf)
-	audioFile, _ := CreateAudioFormFile(writer, "audio/"+audioFileName+".mp3")
+	audioFile, _ := CreateAudioFormFile(writer, "audio/"+audioFileName+".m4a")
 	io.Copy(audioFile, file)
 	//writer.Close()
 	/*
@@ -87,14 +87,17 @@ func saveAudio(audioData []byte) (string, error) {
 			return "", err
 		}
 	*/
-	cmd := "ffmpeg"
-	args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "aac -strict experimental", "audio/" + audioFileName + ".m4a"}
-	if err := exec.Command(cmd, args...).Run(); err != nil {
-		log.Println("Error downloading audio file")
-		log.Println(err.Error())
-		return "", err
-	}
-	log.Println("converted mp3 to m4a")
+
+	/*
+		cmd := "ffmpeg"
+		args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "aac -strict experimental", "audio/" + audioFileName + ".m4a"}
+		if err := exec.Command(cmd, args...).Run(); err != nil {
+			log.Println("Error downloading audio file")
+			log.Println(err.Error())
+			return "", err
+		}
+		log.Println("converted mp3 to m4a")
+	*/
 
 	// Delete the oldest
 	cleanMediaDirectory("audio")
