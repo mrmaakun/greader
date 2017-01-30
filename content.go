@@ -61,7 +61,7 @@ func saveAudio(audioData []byte) (string, error) {
 
 	buf := new(bytes.Buffer)
 
-	newFile, err := os.Create("audio/" + audioFileName + ".mp3")
+	newFile, err := os.Create("audio/" + audioFileName + ".m4a")
 
 	numBytesWritten, err := io.Copy(newFile, bytes.NewReader(audioData))
 	if err != nil {
@@ -75,7 +75,7 @@ func saveAudio(audioData []byte) (string, error) {
 
 	file, _ := os.Open(audioFileName + ".mp3")
 	writer := multipart.NewWriter(buf)
-	audioFile, _ := CreateAudioFormFile(writer, "audio/"+audioFileName+".mp3")
+	audioFile, _ := CreateAudioFormFile(writer, "audio/"+audioFileName+".m4a")
 	io.Copy(audioFile, file)
 	writer.Close()
 
