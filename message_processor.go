@@ -66,11 +66,17 @@ func processImageMessage(e Event) {
 
 	numberOfFaces := len(imageData.Faces)
 
+	if numberOfFaces > 0 {
+
+		if numberOfFaces == 1 {
+			pictureDescriptionSlice = append(pictureDescriptionSlice, "There is one person in this picture. ")
+		} else {
+			pictureDescriptionSlice = append(pictureDescriptionSlice, "There are "+strconv.Itoa(numberOfFaces)+"people in this picture. ")
+		}
+	}
+
 	// We will only read emotions for groups of people up to 3.
 	if numberOfFaces > 0 && numberOfFaces < 4 {
-
-		pictureDescriptionSlice = append(pictureDescriptionSlice, "There appear to be "+strconv.Itoa(numberOfFaces)+" people in this picture. ")
-
 		switch numberOfFaces {
 		case 1:
 			firstPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])])
