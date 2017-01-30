@@ -96,12 +96,16 @@ func audioReplyMessage(e Event, messages []string, captions []string) {
 		})
 	}
 
+	var buffer bytes.Buffer
+
 	for _, caption := range captions {
-		outgoingMessageSlice = append(outgoingMessageSlice, ReplyMessage{
-			Type: "text",
-			Text: caption,
-		})
+		buffer.WriteString(caption)
 	}
+
+	outgoingMessageSlice = append(outgoingMessageSlice, ReplyMessage{
+		Type: "text",
+		Text: buffer.String(),
+	})
 
 	reply := Reply{
 		SendReplyToken: e.ReplyToken,
