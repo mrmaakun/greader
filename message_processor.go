@@ -74,6 +74,7 @@ func processImageMessage(e Event) {
 
 		switch numberOfFaces {
 		case 1:
+			firstPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])])
 			if firstPersonEmotion != "" {
 				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person in this picture looks "+firstPersonEmotion+".")
 			}
