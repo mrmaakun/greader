@@ -18,7 +18,7 @@ import (
 func CreateAudioFormFile(w *multipart.Writer, filename string) (io.Writer, error) {
 	h := make(textproto.MIMEHeader)
 	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, "file", filename))
-	h.Set("Content-Type", "audio/mpeg")
+	h.Set("Content-Type", "audio/x-m4a")
 	return w.CreatePart(h)
 }
 
