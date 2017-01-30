@@ -15,10 +15,11 @@ import (
 	"time"
 )
 
+// This method is used to correct the audio file's content type. It comes from microsoft as "application/octet-stream"
 func CreateAudioFormFile(w *multipart.Writer, filename string, contenttype string) (io.Writer, error) {
 	h := make(textproto.MIMEHeader)
 	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, "file", filename))
-	h.Set("Content-Type", "audio/x-m4a")
+	h.Set("Content-Type", contenttype)
 	return w.CreatePart(h)
 }
 
@@ -57,11 +58,13 @@ func saveAudio(audioData []byte) (string, error) {
 	// https://elements.heroku.com/buildpacks/jonathanong/heroku-buildpack-ffmpeg-latest
 
 	// Save image file
-	audioFileName := "audio_" + strconv.Itoa(rand.Intn(10000))
+	audioFileNameRoot := "audio_" + strconv.Itoa(rand.Intn(10000))
+
+	audioFileNameMp3 := "audio/" + audioFileNameRoot + ".mp3"
+	audioFileNameM4a := "audio/" + audioFileNameRoot + ".m4a"
 
 	buf := new(bytes.Buffer)
-
-	newFile, err := os.Create("audio/" + audioFileName + ".mp3")
+	newFile, err := os.Create(audioFileNameMp3)
 
 	numBytesWritten, err := io.Copy(newFile, bytes.NewReader(audioData))
 	if err != nil {
@@ -71,11 +74,12 @@ func saveAudio(audioData []byte) (string, error) {
 	}
 
 	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
-	log.Println("File name: " + audioFileName)
+	log.Println("File name: " + audioFileNameMp3)
 
-	file, _ := os.Open("audio/" + audioFileName + ".mp3")
+	// Correct the content type
+	file, _ := os.Open(audioFileNameMp3)
 	writer := multipart.NewWriter(buf)
-	audioFile, _ := CreateAudioFormFile(writer, "audio/"+audioFileName+".mp3", "audio/mpeg")
+	audioFile, _ := CreateAudioFormFile(writer, audioFileNameMp3, "audio/mpeg")
 	io.Copy(audioFile, file)
 	writer.Close()
 	/*
@@ -89,7 +93,7 @@ func saveAudio(audioData []byte) (string, error) {
 	*/
 	//ffmpeg -i audio/test_audio.mp3 -c:a aac -strict experimental audio/output.m4a
 	cmd := "ffmpeg"
-	args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "aac", "audio/" + audioFileName + ".m4a"}
+	args := []string{"-i", audioFileNameMp3, "-c:a", "aac", audioFileNameM4a}
 	exec.Command(cmd, args...).Run()
 
 	/*
@@ -104,7 +108,7 @@ func saveAudio(audioData []byte) (string, error) {
 	// Delete the oldest
 	cleanMediaDirectory("audio")
 
-	return os.Getenv("BASE_HOSTNAME") + "/audio/" + audioFileName + ".m4a", nil
+	return os.Getenv("BASE_HOSTNAME") + audioFileNameM4a, nil
 
 }
 

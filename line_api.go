@@ -91,7 +91,7 @@ func audioReplyMessage(e Event, messages []string) {
 	for _, message := range messages {
 		outgoingMessageSlice = append(outgoingMessageSlice, ReplyMessage{
 			Type:               "audio",
-			Duration:           240000,
+			Duration:           5000,
 			OriginalContentUrl: message,
 		})
 	}
