@@ -73,7 +73,7 @@ func saveAudio(audioData []byte) (string, error) {
 	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
 	log.Println("File name: " + audioFileName)
 
-	file, _ := os.Open(audioFileName + ".mp3")
+	file, _ := os.Open(audioFileName + ".m4a")
 	writer := multipart.NewWriter(buf)
 	audioFile, _ := CreateAudioFormFile(writer, "audio/"+audioFileName+".m4a")
 	io.Copy(audioFile, file)
