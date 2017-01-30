@@ -89,7 +89,7 @@ func saveAudio(audioData []byte) (string, error) {
 	*/
 	//ffmpeg -i audio/test_audio.mp3 -c:a aac -strict experimental audio/output.m4a
 	cmd := "ffmpeg"
-	args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "aac -strict experimental", "audio/" + audioFileName + ".m4a"}
+	args := []string{"-i", "audio/" + audioFileName + ".mp3", "-c:a", "aac", "audio/" + audioFileName + ".m4a"}
 	exec.Command(cmd, args...).Run()
 
 	/*
