@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func CreateAudioFormFile(w *multipart.Writer, filename string) (io.Writer, error) {
+func CreateAudioFormFile(w *multipart.Writer, filename string, contenttype string) (io.Writer, error) {
 	h := make(textproto.MIMEHeader)
 	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, "file", filename))
 	h.Set("Content-Type", "audio/x-m4a")
@@ -61,7 +61,7 @@ func saveAudio(audioData []byte) (string, error) {
 
 	buf := new(bytes.Buffer)
 
-	newFile, err := os.Create("audio/" + audioFileName + ".m4a")
+	newFile, err := os.Create("audio/" + audioFileName + ".mp3")
 
 	numBytesWritten, err := io.Copy(newFile, bytes.NewReader(audioData))
 	if err != nil {
@@ -73,9 +73,9 @@ func saveAudio(audioData []byte) (string, error) {
 	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
 	log.Println("File name: " + audioFileName)
 
-	file, _ := os.Open("audio/" + audioFileName + ".m4a")
+	file, _ := os.Open("audio/" + audioFileName + ".mp3")
 	writer := multipart.NewWriter(buf)
-	audioFile, _ := CreateAudioFormFile(writer, "audio/"+audioFileName+".m4a")
+	audioFile, _ := CreateAudioFormFile(writer, "audio/"+audioFileName+".mp3", "audio/mpeg")
 	io.Copy(audioFile, file)
 	writer.Close()
 	/*
