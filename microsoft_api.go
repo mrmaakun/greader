@@ -180,12 +180,15 @@ func textToSpeechApi(text string) ([]byte, error) {
 
 	if err != nil {
 		log.Println("Error calling the speech API")
+		log.Println(err.Error())
+
 		return []byte{}, err
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("Error calling the speech API")
+		log.Println(err.Error())
 		return []byte{}, err
 	}
 
