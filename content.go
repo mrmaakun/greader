@@ -8,9 +8,19 @@ import (
 	"math/rand"
 	"os"
 	//"os/exec"
+	"fmt"
+	"mime/multipart"
+	"net/textproto"
 	"strconv"
 	"time"
 )
+
+func CreateAudioFormFile(w *multipart.Writer, filename string) (io.Writer, error) {
+	h := make(textproto.MIMEHeader)
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, "file", filename))
+	h.Set("Content-Type", "audio/mpeg")
+	return w.CreatePart(h)
+}
 
 func downloadImage(imageId string) (string, error) {
 
@@ -48,6 +58,9 @@ func saveAudio(audioData []byte) (string, error) {
 
 	// Save image file
 	audioFileName := "audio_" + strconv.Itoa(rand.Intn(10000))
+
+	buf := new(bytes.Buffer)
+
 	newFile, err := os.Create("audio/" + audioFileName + ".mp3")
 
 	numBytesWritten, err := io.Copy(newFile, bytes.NewReader(audioData))
@@ -59,6 +72,12 @@ func saveAudio(audioData []byte) (string, error) {
 
 	log.Printf("Downloaded %d byte file.\n", numBytesWritten)
 	log.Println("File name: " + audioFileName)
+
+	file, _ := os.Open(audioFileName + ".mp3")
+	writer := multipart.NewWriter(buf)
+	audioFile, _ := CreateAudioFormFile(writer, "audio/"+audioFileName+".mp3")
+	io.Copy(audioFile, file)
+	writer.Close()
 
 	/*
 		cmd1 := "ffmpeg"
