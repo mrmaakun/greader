@@ -25,7 +25,7 @@ func convertToVoice(textSlice []string) string {
 		log.Println("Error calling saving audio")
 	}
 
-	log.Println("Speech Text: " + string(speechData))
+	log.Println("Speech Text: " + buffer.String())
 
 	return audioFilePath
 
