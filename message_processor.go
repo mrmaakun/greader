@@ -64,7 +64,6 @@ func processImageMessage(e Event) {
 
 	pictureDescriptionSlice := []string{"This is a picture of " + imageData.Description.Captions[0].Text + "."}
 
-	firstPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])])
 	numberOfFaces := len(imageData.Faces)
 
 	pictureDescriptionSlice = append(pictureDescriptionSlice, "There appear to be "+strconv.Itoa(numberOfFaces)+" people in this picture.")
