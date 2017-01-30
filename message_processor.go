@@ -62,31 +62,48 @@ func processImageMessage(e Event) {
 
 	sort.Ints(facePositionSlice)
 
-	pictureDescriptionSlice := []string{"This is a picture of " + imageData.Description.Captions[0].Text}
+	pictureDescriptionSlice := []string{"This is a picture of " + imageData.Description.Captions[0].Text + "."}
 
+	firstPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])])
 	numberOfFaces := len(imageData.Faces)
-	if numberOfFaces > 0 {
 
-		if numberOfFaces == 1 {
-			pictureDescriptionSlice = append(pictureDescriptionSlice, "There person in this picture appe")
-		}
+	pictureDescriptionSlice = append(pictureDescriptionSlice, "There appear to be "+strconv.Itoa(numberOfFaces)+" people in this picture.")
 
-		pictureDescriptionSlice = append(pictureDescriptionSlice, "There appear to be "+strconv.Itoa(numberOfFaces)+" people in this picture.")
+	// We will only read emotions for groups of people up to 3.
+	if numberOfFaces > 0 && numberOfFaces < 4 {
 
-		// TODO: Make this a constant somewhere
-		// Only try to describe emotions if there are only a few people. If there are too many, the send message API
-		// Will fail
-		if numberOfFaces < 5 {
-			pictureDescriptionSlice = append(pictureDescriptionSlice, "The first person on the left appears to be feeling "+strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])]))
-			for i := 1; i < len(facePositionSlice); i++ {
-				pictureDescriptionSlice = append(pictureDescriptionSlice, "The next person to the right appears to be feeling "+strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[i])]))
+		switch numberOfFaces {
+		case 1:
+			if firstPersonEmotion != "" {
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person in this picture looks "+firstPersonEmotion+".")
+			}
+		case 2:
+			leftPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])])
+			rightPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[1])])
+			if leftPersonEmotion != "" {
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the left looks "+leftPersonEmotion+".")
+			}
+			if rightPersonEmotion != "" {
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the right looks "+rightPersonEmotion+".")
+			}
+		case 3:
+			leftPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])])
+			centerPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[1])])
+			rightPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[1])])
+
+			if leftPersonEmotion != "" {
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the left looks "+leftPersonEmotion+".")
+			}
+			if centerPersonEmotion != "" {
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person in the middle looks "+centerPersonEmotion+".")
+			}
+			if rightPersonEmotion != "" {
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the right looks "+rightPersonEmotion+".")
 			}
 		}
 
 	}
-
 	audioReplyMessage(e, []string{convertToVoice(pictureDescriptionSlice)})
-
 }
 
 func processAudioMessage(e Event) {

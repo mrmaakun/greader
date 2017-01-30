@@ -28,5 +28,27 @@ func determineEmotion(emotionData EmotionScores) string {
 	}
 
 	typeOfScore := s.Type()
-	return typeOfScore.Field(maxEmotionIndex).Name
+
+	// Translate cateogry to proper language
+
+	switch typeOfScore.Field(maxEmotionIndex).Name {
+
+	case "Anger":
+		return "angry"
+	case "Contempt":
+		return "like they have hate in their eyes"
+	case "Disgust":
+		return "disgusted"
+	case "Fear":
+		return "scared"
+	case "Happiness":
+		return "happy"
+	case "Sadness":
+		return "sad"
+	case "Surprise":
+		return "surprised"
+	default:
+		return ""
+	}
+
 }
