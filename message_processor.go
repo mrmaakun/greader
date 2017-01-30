@@ -109,7 +109,7 @@ func processImageMessage(e Event) {
 		}
 
 	}
-	audioReplyMessage(e, []string{convertToVoice(pictureDescriptionSlice)})
+	audioReplyMessage(e, []string{convertToVoice(pictureDescriptionSlice)}, pictureDescriptionSlice)
 }
 
 func processAudioMessage(e Event) {

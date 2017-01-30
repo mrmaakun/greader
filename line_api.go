@@ -82,7 +82,7 @@ func replyMessage(e Event, messages []string) {
 
 }
 
-func audioReplyMessage(e Event, messages []string) {
+func audioReplyMessage(e Event, messages []string, captions []string) {
 
 	log.Println("Entered reply message")
 
@@ -93,6 +93,13 @@ func audioReplyMessage(e Event, messages []string) {
 			Type:               "audio",
 			Duration:           5000,
 			OriginalContentUrl: message,
+		})
+	}
+
+	for _, caption := range captions {
+		outgoingMessageSlice = append(outgoingMessageSlice, ReplyMessage{
+			Type: "text",
+			Text: caption,
 		})
 	}
 
