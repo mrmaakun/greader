@@ -23,10 +23,6 @@ func determineEmotion(emotionData EmotionScores) string {
 	// so that the bot doesn't make any statements about
 	// emotion
 
-	if maxEmotionValue < .5 {
-		return "None"
-	}
-
 	typeOfScore := s.Type()
 
 	// Translate cateogry to proper language
