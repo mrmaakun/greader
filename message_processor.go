@@ -62,29 +62,29 @@ func processImageMessage(e Event) {
 
 	sort.Ints(facePositionSlice)
 
-	pictureDescriptionSlice := []string{"This is a picture of " + imageData.Description.Captions[0].Text + "."}
+	pictureDescriptionSlice := []string{"This is a picture of " + imageData.Description.Captions[0].Text + ". "}
 
 	numberOfFaces := len(imageData.Faces)
 
-	pictureDescriptionSlice = append(pictureDescriptionSlice, "There appear to be "+strconv.Itoa(numberOfFaces)+" people in this picture.")
-
 	// We will only read emotions for groups of people up to 3.
 	if numberOfFaces > 0 && numberOfFaces < 4 {
+
+		pictureDescriptionSlice = append(pictureDescriptionSlice, "There appear to be "+strconv.Itoa(numberOfFaces)+" people in this picture. ")
 
 		switch numberOfFaces {
 		case 1:
 			firstPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])])
 			if firstPersonEmotion != "" {
-				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person in this picture looks "+firstPersonEmotion+".")
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person in this picture looks "+firstPersonEmotion+". ")
 			}
 		case 2:
 			leftPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])])
 			rightPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[1])])
 			if leftPersonEmotion != "" {
-				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the left looks "+leftPersonEmotion+".")
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the left looks "+leftPersonEmotion+". ")
 			}
 			if rightPersonEmotion != "" {
-				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the right looks "+rightPersonEmotion+".")
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the right looks "+rightPersonEmotion+". ")
 			}
 		case 3:
 			leftPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[0])])
@@ -92,13 +92,13 @@ func processImageMessage(e Event) {
 			rightPersonEmotion := strings.ToLower(emotionResultMap[strconv.Itoa(facePositionSlice[1])])
 
 			if leftPersonEmotion != "" {
-				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the left looks "+leftPersonEmotion+".")
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the left looks "+leftPersonEmotion+". ")
 			}
 			if centerPersonEmotion != "" {
-				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person in the middle looks "+centerPersonEmotion+".")
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person in the middle looks "+centerPersonEmotion+". ")
 			}
 			if rightPersonEmotion != "" {
-				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the right looks "+rightPersonEmotion+".")
+				pictureDescriptionSlice = append(pictureDescriptionSlice, "The person on the right looks "+rightPersonEmotion+". ")
 			}
 		}
 
