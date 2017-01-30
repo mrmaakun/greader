@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -212,6 +213,8 @@ func textToSpeechApi(text string) ([]byte, error) {
 	returnData, err := ioutil.ReadAll(resp.Body)
 
 	log.Println("Audio Content Header Response: " + resp.Header.Get("Content-Type"))
+
+	log.Println("Content Type: " + http.DetectContentType(returnData))
 
 	if err != nil {
 		log.Println("Error calling the speech API")
